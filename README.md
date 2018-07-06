@@ -7,7 +7,7 @@ Project homepage：http://hzfu.github.io/proj_glaucoma_fundus.html
 1. The code is based on: *Keras 2.0 + Tensorflow 1.0*
 2. The deep output is raw segmentation result without ellipse fitting.
 3. The pre-train models are trained on **ORIGA full dataset**.
-4. Download the FIVE models for DENet to 'pre_model' folder: [[OneDrive]](https://1drv.ms/f/s!ArBRrL8ao6jzmkFHvpKCrwVzRdVh) [[BaiduPan]](https://pan.baidu.com/s/1eDT0N4tQsWI4McyGB36vLw):
+4. Download the trained models for DENet to 'pre_model' folder: [[OneDrive]](https://1drv.ms/f/s!ArBRrL8ao6jzmkFHvpKCrwVzRdVh) [[BaiduPan]](https://pan.baidu.com/s/1eDT0N4tQsWI4McyGB36vLw):
 	1. Disc detection model: 'pre_model_DiscSeg.h5' 
 	2. Global image Screening model: 'pre_model_img.h5' 
 	3. Segmentation-guided Screening model: 'pre_model_disc.h5' 
