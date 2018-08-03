@@ -32,7 +32,7 @@ Unfortunately, the ORIGA, SCES, and SINDI datasets cannot be released due to the
 But, here is an other glaucoma challenge, *Retinal Fundus Glaucoma Challenge (REFUGE)*, including disc/cup segmentation, glaucoma screening, and localization of Fovea. If you are interested, you can register it from:
 [[HERE]](https://refuge.grand-challenge.org/home/)
 
-We also provide the results of our DENet, the details could be found from [[HERE]](https://github.com/HzFu/REFUGE_baseline) 
+We also provide the results of our DENet, the details could be found from: [[HERE]](https://github.com/HzFu/REFUGE_baseline) 
 
 ----------------
 
