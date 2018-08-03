@@ -24,7 +24,15 @@ If you use this code, please cite the following papers:
 [2] Huazhu Fu, Jun Cheng, Yanwu Xu, Damon Wing Kee Wong, Jiang Liu, and Xiaochun Cao, "Joint Optic Disc and Cup Segmentation Based on Multi-label Deep Network and Polar Transformation", IEEE Transactions on Medical Imaging (TMI), vol. 37, no. 7, pp. 1597–1605, 2018. ([ArXiv version](https://arxiv.org/abs/1801.00926)) 
 
 
+----------------
+**For ORIGA and SCES datasets**
 
+Unfortunately, the ORIGA, SCES, and SINDI datasets cannot be released due to the clinical policy.
+
+But, here is an other glaucoma challenge, *Retinal Fundus Glaucoma Challenge (REFUGE)*, including disc/cup segmentation, glaucoma screening, and localization of Fovea. If you are interested, you can register it from:
+[[HERE]](https://refuge.grand-challenge.org/home/)
+
+We also provide the results of our DENet, the details could be found from [[HERE]](https://github.com/HzFu/REFUGE_baseline) 
 
 ----------------
 
