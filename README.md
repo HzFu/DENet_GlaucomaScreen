@@ -4,7 +4,7 @@ Code for TMI 2018 "Disc-aware Ensemble Network for Glaucoma Screening from Fundu
 
 Project homepage：http://hzfu.github.io/proj_glaucoma_fundus.html
 
-1. The code is based on: *Keras 2.0 + Tensorflow 1.0*
+1. The code is based on: *TensorFlow 1.14 (with Keras)*
 2. The deep output is raw segmentation result without ellipse fitting.
 3. The pre-train models are trained on **ORIGA full dataset**.
 4. Download the trained models for DENet to 'pre_model' folder: [[OneDrive]](https://1drv.ms/f/s!ArBRrL8ao6jzmkFHvpKCrwVzRdVh) [[BaiduPan]](https://pan.baidu.com/s/1eDT0N4tQsWI4McyGB36vLw):

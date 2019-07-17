@@ -1,19 +1,18 @@
 #
-import numpy as np
-import scipy
-import scipy.io as sio
-from scipy.misc import imsave
-from keras.preprocessing import image
-
-from skimage.measure import label, regionprops
-from skimage.transform import rotate 
+import os
 from time import time
-from utils import BW_img, Deep_Screening, Disc_Crop
 
 import cv2
+import numpy as np
+import scipy.io as sio
+from PIL import Image
+from skimage.measure import label, regionprops
+from skimage.transform import rotate
+from tensorflow.python.keras.preprocessing import image
 
-import os
-os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+from utils import BW_img, Deep_Screening, Disc_Crop
+
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 import Model_Disc_Seg as DiscSegModel
@@ -24,17 +23,15 @@ Img_Seg_size = 640
 Img_Scr_size = 400
 ROI_Scr_size = 224
 
-pre_model_DiscSeg = './pre_model/pre_model_DiscSeg.h5'
-pre_model_img = './pre_model/pre_model_img.h5'
-pre_model_ROI = './pre_model/pre_model_ROI.h5'
-pre_model_flat = './pre_model/pre_model_flat.h5'
-pre_model_disc = './pre_model/pre_model_disc.h5'
+pre_model_DiscSeg = os.path.join('pre_model', 'pre_model_DiscSeg.h5')
+pre_model_img = os.path.join('pre_model', 'pre_model_img.h5')
+pre_model_ROI = os.path.join('pre_model', 'pre_model_ROI.h5')
+pre_model_flat = os.path.join('pre_model', 'pre_model_flat.h5')
+pre_model_disc = os.path.join('pre_model', 'pre_model_disc.h5')
 
 data_type = '.jpg'
-data_img_path = './test_image/'
-data_save_path = './result/'
-
-
+data_img_path = 'test_image'
+data_save_path = 'result'
 
 if not os.path.exists(data_save_path):
     os.makedirs(data_save_path)
@@ -59,15 +56,15 @@ Disc_model.load_weights(pre_model_disc, by_name=True)
 
 for lineIdx in range(0, len(file_test_list)):
     temp_txt = [elt.strip() for elt in file_test_list[lineIdx].split(',')]
-    org_img = np.asarray(image.load_img(data_img_path + temp_txt[0]))
- 
-    img_scale = 2048.0 / org_img.shape[0] 
-    org_img = scipy.misc.imresize(org_img, (2048, int(org_img.shape[1]*img_scale), 3))
- 
+    org_img = np.asarray(image.load_img(os.path.join(data_img_path, temp_txt[0])))
+
+    img_scale = 2048.0 / org_img.shape[0]
+    org_img = np.array(Image.fromarray(org_img).resize((2048, int(org_img.shape[1] * img_scale))).convert(3))
+
     start_time = time()
 
     # disc segmentation
-    temp_img = scipy.misc.imresize(org_img, (Img_Seg_size, Img_Seg_size, 3))
+    temp_img = np.array(Image.fromarray(org_img).resize((Img_Seg_size, Img_Seg_size)).convert(3))
     temp_img = np.reshape(temp_img, (1,) + temp_img.shape)
     [prob_6, prob_7, prob_8, prob_9, prob_10] = seg_model.predict([temp_img])
     disc_map = np.reshape(prob_10, (Img_Seg_size, Img_Seg_size))
@@ -79,9 +76,10 @@ for lineIdx in range(0, len(file_test_list)):
     regions = regionprops(label(disc_map))
     C_x = regions[0].centroid[0] * org_img.shape[0] / Img_Seg_size
     C_y = regions[0].centroid[1] * org_img.shape[1] / Img_Seg_size
-    disc_region = Disc_Crop(org_img, Img_Scr_size*2, C_x, C_y)
+    disc_region = Disc_Crop(org_img, Img_Scr_size * 2, C_x, C_y)
 
-    Disc_flat = rotate(cv2.linearPolar(disc_region, (Img_Scr_size, Img_Scr_size), Img_Scr_size, cv2.WARP_FILL_OUTLIERS), -90)
+    Disc_flat = rotate(cv2.linearPolar(disc_region, (Img_Scr_size, Img_Scr_size), Img_Scr_size, cv2.WARP_FILL_OUTLIERS),
+                       -90)
 
     # global screening
     Img_pred = Deep_Screening(img_model, org_img, Img_Scr_size)
@@ -92,10 +90,17 @@ for lineIdx in range(0, len(file_test_list)):
     DENet_pred = np.mean([Img_pred[0][1], Disc_pred[0][1], Polar_pred[0][1], Seg_pred[0][1]])
     run_time = time() - start_time
 
-    print('Run time: ' + str(run_time) + '   Img number: ' + str(lineIdx + 1))
+    print('Run time:\t{run_time}\t\tImg number:\t{idx}'.format(run_time=run_time, idx=lineIdx + 1))
 
-    tmp_name = data_save_path+temp_txt[0]
-    sio.savemat(tmp_name[:-4]+'.mat', {'Img_pred': Img_pred, 
-    	'Disc_pred': Disc_pred, 'Polar_pred': Polar_pred, 'Seg_pred': Seg_pred, 'DENet_pred': DENet_pred})
+    tmp_name = os.path.join(data_save_path, temp_txt[0])
+    sio.savemat(
+        tmp_name[:-4] + '.mat',
+        {
+            'Img_pred': Img_pred,
+            'Disc_pred': Disc_pred,
+            'Polar_pred': Polar_pred,
+            'Seg_pred': Seg_pred,
+            'DENet_pred': DENet_pred
+        }
+    )
     # imsave(tmp_name[:-4]+'.png', Disc_flat)
-

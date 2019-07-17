@@ -1,21 +1,14 @@
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import print_function
 
-from keras.layers import Input
-from keras import layers
-from keras.layers import Dense
-from keras.layers import Activation
-from keras.layers import Flatten
-from keras.layers import Conv2D
-from keras.layers import MaxPooling2D
-from keras.layers import ZeroPadding2D
-from keras.layers import AveragePooling2D
-from keras.layers import BatchNormalization
-from keras.models import Model
-from keras import backend as K
+from tensorflow.python.keras import backend as K
+from tensorflow.python.keras import layers
+from tensorflow.python.keras.layers import (Dense, Activation, Flatten, Conv2D, MaxPooling2D, Input,
+                                            ZeroPadding2D, AveragePooling2D, BatchNormalization)
+from tensorflow.python.keras.models import Model
+
 
 def identity_block(input_tensor, kernel_size, filters, stage, block):
-
     filters1, filters2, filters3 = filters
     if K.image_data_format() == 'channels_last':
         bn_axis = 3
@@ -47,8 +40,10 @@ def conv_block(input_tensor, kernel_size, filters, stage, block, strides=(2, 2))
         bn_axis = 3
     else:
         bn_axis = 1
-    conv_name_base = 'res' + str(stage) + block + '_branch'
-    bn_name_base = 'bn' + str(stage) + block + '_branch'
+
+    _name_base = '{stage}{block}_branch'.format(stage=stage, block=block)
+    conv_name_base = 'res{name_base}'.format(name_base=_name_base)
+    bn_name_base = 'bn{name_base}'.format(name_base=_name_base)
 
     x = Conv2D(filters1, (1, 1), strides=strides,
                name=conv_name_base + '2a')(input_tensor)
@@ -72,8 +67,7 @@ def conv_block(input_tensor, kernel_size, filters, stage, block, strides=(2, 2))
     return x
 
 
-def DeepModel(size_set = 800):
-
+def DeepModel(size_set=800):
     img_input = Input(shape=(size_set, size_set, 3))
 
     if K.image_data_format() == 'channels_last':
