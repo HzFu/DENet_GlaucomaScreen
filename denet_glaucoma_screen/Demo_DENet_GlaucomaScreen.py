@@ -30,8 +30,8 @@ Img_Seg_size = 640
 Img_Scr_size = 400
 ROI_Scr_size = 224
 
-parent_dir = partial(path.join, path.dirname(resource_filename(modules[__name__].__name__, '__init__.py')))
-pre_model_dir = partial(path.join, 'pre_model')
+parent_dir = path.dirname(resource_filename(modules[__name__].__name__, '__init__.py'))
+pre_model_dir = partial(os.path.join, parent_dir, 'pre_model')
 
 pre_model_DiscSeg = pre_model_dir('pre_model_DiscSeg.h5')
 pre_model_img = pre_model_dir('pre_model_img.h5')
