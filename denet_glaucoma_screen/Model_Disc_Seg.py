@@ -28,13 +28,15 @@ def DeepModel(size_set=640):
     conv5 = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv1')(pool4)
     conv5 = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv2')(conv5)
 
-    up6 = concatenate([Conv2DTranspose(256, (2, 2), strides=(2, 2), padding='same', name='block6_dconv')(conv5), conv4],
-                      axis=3)
+    up6 = concatenate(
+        [Conv2DTranspose(256, (2, 2), strides=(2, 2), padding='same', name='block6_dconv')(conv5), conv4],
+        axis=3)
     conv6 = Conv2D(256, (3, 3), activation='relu', padding='same', name='block6_conv1')(up6)
     conv6 = Conv2D(256, (3, 3), activation='relu', padding='same', name='block6_conv2')(conv6)
 
-    up7 = concatenate([Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same', name='block7_dconv')(conv6), conv3],
-                      axis=3)
+    up7 = concatenate(
+        [Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same', name='block7_dconv')(conv6), conv3],
+        axis=3)
     conv7 = Conv2D(128, (3, 3), activation='relu', padding='same', name='block7_conv1')(up7)
     conv7 = Conv2D(128, (3, 3), activation='relu', padding='same', name='block7_conv2')(conv7)
 

@@ -1,43 +1,53 @@
-#
+# -*- coding: utf-8 -*-
+
+from __future__ import print_function
+
 import os
+from functools import partial
+from os import path
+from sys import modules
 from time import time
 
 import cv2
 import numpy as np
 import scipy.io as sio
 from PIL import Image
+from pkg_resources import resource_filename
 from skimage.measure import label, regionprops
 from skimage.transform import rotate
 from tensorflow.python.keras.preprocessing import image
 
-from utils import BW_img, Deep_Screening, Disc_Crop
+from denet_glaucoma_screen.utils import BW_img, Deep_Screening, Disc_Crop
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
-import Model_Disc_Seg as DiscSegModel
-import Model_resNet50 as ScreenModel
-import Model_UNet_Side as DiscModel
+from denet_glaucoma_screen import (Model_resNet50 as ScreenModel,
+                                   Model_Disc_Seg as DiscSegModel,
+                                   Model_UNet_Side as DiscModel)
 
 Img_Seg_size = 640
 Img_Scr_size = 400
 ROI_Scr_size = 224
 
-pre_model_DiscSeg = os.path.join('pre_model', 'pre_model_DiscSeg.h5')
-pre_model_img = os.path.join('pre_model', 'pre_model_img.h5')
-pre_model_ROI = os.path.join('pre_model', 'pre_model_ROI.h5')
-pre_model_flat = os.path.join('pre_model', 'pre_model_flat.h5')
-pre_model_disc = os.path.join('pre_model', 'pre_model_disc.h5')
+parent_dir = partial(path.join, path.dirname(resource_filename(modules[__name__].__name__, '__init__.py')))
+pre_model_dir = partial(path.join, 'pre_model')
+
+pre_model_DiscSeg = pre_model_dir('pre_model_DiscSeg.h5')
+pre_model_img = pre_model_dir('pre_model_img.h5')
+pre_model_ROI = pre_model_dir('pre_model_ROI.h5')
+pre_model_flat = pre_model_dir('pre_model_flat.h5')
+pre_model_disc = pre_model_dir('pre_model_disc.h5')
 
 data_type = '.jpg'
-data_img_path = 'test_image'
-data_save_path = 'result'
+data_img_path = os.path.join(parent_dir, 'test_image')
+data_save_path = os.path.join(parent_dir, 'result')
 
 if not os.path.exists(data_save_path):
     os.makedirs(data_save_path)
 
 file_test_list = [file for file in os.listdir(data_img_path) if file.lower().endswith(data_type)]
-print(str(len(file_test_list)))
+print(len(file_test_list))
 
 seg_model = DiscSegModel.DeepModel(Img_Seg_size)
 seg_model.load_weights(pre_model_DiscSeg, by_name=True)
@@ -54,8 +64,8 @@ ROIpt_model.load_weights(pre_model_flat, by_name=True)
 Disc_model = DiscModel.DeepModel(Img_Seg_size)
 Disc_model.load_weights(pre_model_disc, by_name=True)
 
-for lineIdx in range(0, len(file_test_list)):
-    temp_txt = [elt.strip() for elt in file_test_list[lineIdx].split(',')]
+for lineIdx, file_test in enumerate(file_test_list):
+    temp_txt = [elt.strip() for elt in file_test.split(',')]
     org_img = np.asarray(image.load_img(os.path.join(data_img_path, temp_txt[0])))
 
     img_scale = 2048.0 / org_img.shape[0]
@@ -78,8 +88,9 @@ for lineIdx in range(0, len(file_test_list)):
     C_y = regions[0].centroid[1] * org_img.shape[1] / Img_Seg_size
     disc_region = Disc_Crop(org_img, Img_Scr_size * 2, C_x, C_y)
 
-    Disc_flat = rotate(cv2.linearPolar(disc_region, (Img_Scr_size, Img_Scr_size), Img_Scr_size, cv2.WARP_FILL_OUTLIERS),
-                       -90)
+    Disc_flat = rotate(
+        cv2.linearPolar(disc_region, (Img_Scr_size, Img_Scr_size), Img_Scr_size, cv2.WARP_FILL_OUTLIERS),
+        -90)
 
     # global screening
     Img_pred = Deep_Screening(img_model, org_img, Img_Scr_size)
