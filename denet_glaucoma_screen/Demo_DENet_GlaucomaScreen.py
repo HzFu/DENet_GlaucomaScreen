@@ -69,12 +69,13 @@ for lineIdx, file_test in enumerate(file_test_list):
     org_img = np.asarray(image.load_img(os.path.join(data_img_path, temp_txt[0])))
 
     img_scale = 2048.0 / org_img.shape[0]
-    org_img = np.array(Image.fromarray(org_img).resize((2048, int(org_img.shape[1] * img_scale))).convert(3))
+    org_img = np.array(Image.fromarray(org_img, mode='RGB').resize((2048, int(org_img.shape[1]*img_scale))))
+
 
     start_time = time()
 
     # disc segmentation
-    temp_img = np.array(Image.fromarray(org_img).resize((Img_Seg_size, Img_Seg_size)).convert(3))
+    temp_img = np.array(Image.fromarray(org_img, mode='RGB').resize((Img_Seg_size, Img_Seg_size)))
     temp_img = np.reshape(temp_img, (1,) + temp_img.shape)
     [prob_6, prob_7, prob_8, prob_9, prob_10] = seg_model.predict([temp_img])
     disc_map = np.reshape(prob_10, (Img_Seg_size, Img_Seg_size))

@@ -7,7 +7,8 @@ from skimage.measure import label, regionprops
 
 def pro_process(temp_img, input_size):
     img = np.asarray(temp_img).astype('float32')
-    img = np.array(Image.fromarray(img).resize((input_size, input_size)).convert(3))
+    img = np.array(Image.fromarray(img).resize((input_size, input_size)))
+    print (type(img))
     return img
 
 
@@ -29,7 +30,7 @@ def BW_img(input, thresholding):
 
 
 def Deep_Screening(target_model, tmp_img, input_size):
-    temp_img = np.array(Image.fromarray(tmp_img).resize((input_size, input_size)).convert(3))
+    temp_img = np.array(Image.fromarray(tmp_img,mode='RGB').resize((input_size, input_size)))
     temp_img = np.reshape(temp_img, (1,) + temp_img.shape)
     Pre_result = target_model.predict(temp_img)
     return Pre_result
