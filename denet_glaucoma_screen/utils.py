@@ -8,7 +8,6 @@ from skimage.measure import label, regionprops
 def pro_process(temp_img, input_size):
     img = np.asarray(temp_img).astype('float32')
     img = np.array(Image.fromarray(img).resize((input_size, input_size)))
-    print (type(img))
     return img
 
 
