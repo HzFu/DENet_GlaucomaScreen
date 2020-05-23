@@ -1,14 +1,12 @@
-from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import print_function
 
-from keras.models import Model
-from keras.layers import Input, concatenate, Conv2D, MaxPooling2D, Conv2DTranspose, UpSampling2D, average
-from keras.layers import Dense, AveragePooling2D
-from keras.layers import Activation
-from keras.layers import Flatten
+from tensorflow.python.keras.layers import (Input, Conv2D, MaxPooling2D, Dense,
+                                            AveragePooling2D, Flatten)
+from tensorflow.python.keras.models import Model
 
-def DeepModel(size_set = 640):
 
+def DeepModel(size_set=640):
     img_input = Input(shape=(size_set, size_set, 3))
 
     conv1 = Conv2D(32, (3, 3), activation='relu', padding='same', name='block1_conv1', trainable=False)(img_input)
@@ -35,7 +33,5 @@ def DeepModel(size_set = 640):
     x = Flatten(name='out_feat')(x)
     x = Dense(2048, activation='relu', name='fc1')(x)
     x = Dense(2, activation='softmax', name='fc3')(x)
-    model = Model(img_input, x)
 
-
-    return model
+    return Model(img_input, x)

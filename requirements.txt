@@ -1,0 +1,5 @@
+numpy
+pillow
+scipy
+scikit-image
+tensorflow==1.14.0

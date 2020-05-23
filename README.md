@@ -1,10 +1,12 @@
-# DENet_GlaucomaScreen
+DENet_GlaucomaScreen
+====================
+![Python version range](https://img.shields.io/badge/python-2.7%E2%80%933.6+-blue.svg)
 
 Code for TMI 2018 "Disc-aware Ensemble Network for Glaucoma Screening from Fundus Image"
 
 Project homepage：http://hzfu.github.io/proj_glaucoma_fundus.html
 
-1. The code is based on: *Keras 2.0 + Tensorflow 1.0*
+1. The code is based on: *TensorFlow 1.14 (with Keras)*
 2. The deep output is raw segmentation result without ellipse fitting.
 3. The pre-train models are trained on **ORIGA full dataset**.
 4. Download the trained models for DENet to 'pre_model' folder: [[OneDrive]](https://1drv.ms/u/s!ArBRrL8ao6jzmkF5oVSUXEeWfK77?e=ddcG9c) [[BaiduPan]](https://pan.baidu.com/s/1eDT0N4tQsWI4McyGB36vLw):
@@ -13,7 +15,6 @@ Project homepage：http://hzfu.github.io/proj_glaucoma_fundus.html
 	3. Segmentation-guided Screening model: 'pre_model_disc.h5' 
 	4. Local disc Screening model: 'pre_model_ROI.h5' 
 	5. Polar disc Screening model: 'pre_model_flat.h5'  
- 
 
 ----------------
 
@@ -23,9 +24,9 @@ If you use this code, please cite the following papers:
 
 [2] Huazhu Fu, Jun Cheng, Yanwu Xu, Damon Wing Kee Wong, Jiang Liu, and Xiaochun Cao, "Joint Optic Disc and Cup Segmentation Based on Multi-label Deep Network and Polar Transformation", IEEE Transactions on Medical Imaging (TMI), vol. 37, no. 7, pp. 1597–1605, 2018. ([ArXiv version](https://arxiv.org/abs/1801.00926)) 
 
-
 ----------------
-**For ORIGA and SCES datasets**
+
+## For ORIGA and SCES datasets
 
 Unfortunately, the ORIGA, SCES, and SINDI datasets cannot be released due to the clinical policy.
 
@@ -39,3 +40,11 @@ We also provide the results of our DENet, the details could be found from: [[HER
 Update log:
 
 - 18.07.06: Released the code.
+
+## Install dependencies
+
+    pip install -r requirements.txt
+
+## Install package
+
+    pip install .
